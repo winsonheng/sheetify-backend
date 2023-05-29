@@ -1,0 +1,12 @@
+setup.txt
+
+# Environment variables
+orbital_backend/.env
+
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+media
