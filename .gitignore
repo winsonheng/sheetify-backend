@@ -13,3 +13,7 @@ orbital_backend/.env
 __pycache__
 db.sqlite3
 media
+
+# trainng data
+*.hdf
+*.pickle
