@@ -17,3 +17,5 @@ media
 # trainng data
 *.hdf
 *.pickle
+
+transcription/
