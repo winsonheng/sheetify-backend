@@ -1,5 +1,8 @@
 setup.txt
 
+# Private keys
+orbital_backend/service-account.json
+
 # Environment variables
 orbital_backend/.env
 
