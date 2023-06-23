@@ -78,6 +78,7 @@ DEBUG = True
 
 INSTALLED_APPS = [
     'songs',
+    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

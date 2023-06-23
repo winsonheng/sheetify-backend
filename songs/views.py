@@ -7,7 +7,8 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.http import HttpResponse
 from django.shortcuts import render
-from songs.models import Song, User
+from songs.models import Song
+from users.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
 
@@ -46,3 +47,6 @@ def save_song(song_name, song_base64):
     song.song_base64.save(song_name, ContentFile(song_base64.encode('utf-8')))
     # cache.set('song', song)
     print('***********successfully uploaded ' + song_name + 'to GCloud*************')
+
+def delete_song(user, song_name):
+    song = Song()

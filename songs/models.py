@@ -3,23 +3,15 @@ from datetime import datetime
 
 class Song(models.Model):
     
-    user = models.ForeignKey('User', on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, null=True)
 
-    name = models.TextField()
+    name = models.CharField(max_length=255)
 
     upload_date = models.DateField(default=datetime.now, blank=True)
 
     filepath = models.URLField(default=None, blank=True, null=True)
 
-    song_base64 = models.FileField(upload_to='blobs')
-
-    def __str__(self):
-        return self.name
-
-
-class User(models.Model):
-
-    name = models.TextField()
+    song_base64 = models.FileField(upload_to='songs')
 
     def __str__(self):
         return self.name
