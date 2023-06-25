@@ -70,6 +70,36 @@ GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
 
 GS_BUCKET_NAME = 'orbital-backend'
 
+
+# Email Verification Config
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env('EMAIL_ID') 
+EMAIL_HOST_PASSWORD = env('EMAIL_PW')
+
+DEFAULT_FROM_EMAIL = 'noreply<no_reply@domain.com>'
+
+
+# For user model
+
+AUTH_USER_MODEL = 'users.User'
+
+AUTHENTICATION_BACKENDS = ['users.auth.EmailBackend']
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+               'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES':(
+                'rest_framework.permissions.IsAuthenticated',
+    ),
+
+}
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -85,7 +115,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders'
+    'corsheaders',
+    'rest_framework',
+    'rest_framework.authtoken',
+    #'verify_email.apps.VerifyEmailConfig',
 ]
 
 MIDDLEWARE = [

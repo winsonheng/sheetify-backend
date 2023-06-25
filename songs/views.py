@@ -43,10 +43,11 @@ def play_song(song_base64):
 
 def save_song(song_name, song_base64):
     print('======================starting to upload=============================')
-    song = Song()
-    song.song_base64.save(song_name, ContentFile(song_base64.encode('utf-8')))
+    #song = Song()
+    #song.song_base64.save(song_name, ContentFile(song_base64.encode('utf-8')))
     # cache.set('song', song)
     print('***********successfully uploaded ' + song_name + 'to GCloud*************')
 
 def delete_song(user, song_name):
-    song = Song()
+    #song = Song()
+    pass

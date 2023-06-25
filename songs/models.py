@@ -3,11 +3,11 @@ from datetime import datetime
 
 class Song(models.Model):
     
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True)
 
     name = models.CharField(max_length=255)
 
-    upload_date = models.DateField(default=datetime.now, blank=True)
+    upload_date = models.DateTimeField(default=datetime.now, blank=True)
 
     filepath = models.URLField(default=None, blank=True, null=True)
 
