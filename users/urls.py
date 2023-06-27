@@ -6,7 +6,7 @@ from . import views_local
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('getAuthToken/', views.obtain_auth_token, name='get_auth_token'),
+    path('getToken/', views.obtain_auth_token, name='get_token'),
     path("signupEmail/", views_local.signup_email, name="signup_email"),
     path('loginEmail/', views_local.login_email, name='login_email'),
 ]

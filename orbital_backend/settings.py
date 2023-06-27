@@ -46,7 +46,8 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_HEADERS = [
     'Content-Type',
-    'X-CSRFToken'
+    'X-CSRFToken',
+    'Authorization'
 ]
 
 # CORS_ORIGIN_ALLOW_ALL=True
@@ -91,10 +92,12 @@ AUTHENTICATION_BACKENDS = ['users.auth.EmailBackend']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-               'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES':(
-                'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated',
     ),
 
 }

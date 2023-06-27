@@ -5,7 +5,7 @@ from django.core.exceptions import BadRequest
 from django.http import HttpResponse
 from django.http import JsonResponse
 from rest_framework.authtoken import views
-
+from rest_framework.authtoken.models import Token
 from users.forms import SignupForm
 from users.models import User
 import json
@@ -29,6 +29,8 @@ def signup_email(request):
     user.set_password(password)
     user.verification_status = User.VerificationStatus.PENDING
     user.save()
+    token = Token.objects.create(user=user)
+    print(token.key)
     # TODO
     # Not sure why verification email not working
     # signup_form = SignupForm({'email': body.get('email', ''), 'password': body.get('password', '')})
