@@ -3,6 +3,8 @@ import base64
 import io
 import pygame
 from common.constants import StatusCode
+from common.util.json_util import from_query_set
+from common.util.gcloud_util import generate_download_signed_url_v4
 from django.core.cache import cache
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
@@ -11,8 +13,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from songs.models import Song
 from users.models import User
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -28,8 +29,8 @@ from rest_framework.decorators import permission_classes
 #@csrf_exempt
 @ensure_csrf_cookie
 @api_view(['POST'])
-@authentication_classes([SessionAuthentication, BasicAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+
 def upload_song(request):
     print(request.user.email)
     print(request.auth.key)
@@ -65,7 +66,8 @@ def play_song(song_base64):
 def save_song(user, song_name, song_base64, difficulty, bpm):
     print('======================starting to upload=============================')
     song = Song(user=user)
-    song.song_original.save(song_name, ContentFile(song_base64.encode('utf-8')))
+    song.name = song_name
+    song.song_original.save(song_name, ContentFile(base64.b64decode(song_base64)))
     song.difficulty = difficulty
     song.bpm = bpm
     song.save()
@@ -74,6 +76,23 @@ def save_song(user, song_name, song_base64, difficulty, bpm):
     print('*****successfully uploaded ' + song_name + ' to GCloud*****')
     print('======================completed   upload=============================')
 
+# TODO: API for delete
 def delete_song(user, song_name):
     #song = Song()
     pass
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+def get_songs_by_user(request):
+    user = Token.objects.get(key=request.auth.key).user
+    
+    songs = Song.objects.filter(user=user).values()
+    
+    for song in songs:
+        print(song['name'], song['song_original'])
+        song['download_link'] = generate_download_signed_url_v4(song['song_original'])
+    
+    return JsonResponse({
+        'songList': from_query_set(songs)
+    }, status=StatusCode.OK)

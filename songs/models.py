@@ -25,7 +25,8 @@ class Song(models.Model):
     
     bpm = models.IntegerField(blank=True, null=True)
 
-    filepath_original = models.URLField(default=None, blank=True, null=True)
+    # not required since it is only generated during getSongs request
+    # download_link = models.URLField(default=None, blank=True, null=True)
 
     song_original = models.FileField(upload_to='songs/original', default=None)
     

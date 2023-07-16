@@ -26,20 +26,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
+dev_client_url = env('DEV_CLIENT_URL')
+dev_allowed_host = env('DEV_ALLOWED_HOST')
+prod_client_url = env('PROD_CLIENT_URL')
+prod_allowed_host = env('PROD_ALLOWED_HOST')
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
+    dev_client_url,
+    prod_client_url
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:3000'
+    dev_client_url,
+    prod_client_url
 ]
 
 ALLOWED_HOSTS = [
-    'localhost'
+    dev_allowed_host,
+    prod_allowed_host
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
+    dev_client_url,
+    prod_client_url
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -49,6 +58,8 @@ CORS_ALLOW_HEADERS = [
     'X-CSRFToken',
     'Authorization'
 ]
+
+CSRF_COOKIE_HTTPONLY = False
 
 # CORS_ORIGIN_ALLOW_ALL=True
 
@@ -92,9 +103,8 @@ AUTHENTICATION_BACKENDS = ['users.auth.EmailBackend']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES':(
         'rest_framework.permissions.IsAuthenticated',
@@ -127,10 +137,9 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
