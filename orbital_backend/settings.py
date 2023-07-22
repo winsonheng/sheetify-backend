@@ -92,7 +92,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env('EMAIL_ID') 
 EMAIL_HOST_PASSWORD = env('EMAIL_PW')
 
-DEFAULT_FROM_EMAIL = 'noreply<no_reply@domain.com>'
+DEFAULT_FROM_EMAIL = env('EMAIL_FROM')
 
 
 # For user model
@@ -131,7 +131,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
-    #'verify_email.apps.VerifyEmailConfig',
+    'verify_email.apps.VerifyEmailConfig',
 ]
 
 MIDDLEWARE = [
