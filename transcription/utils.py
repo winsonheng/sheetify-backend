@@ -12,6 +12,8 @@ def transcribe_b64(file_content, difficulty = 3):
         with open(filename, "w") as f:
             f.write(file_content.decode("utf-8"))
         transcribe(filename, difficulty)
+        with open(filename[:-3] + "mid", "rb") as f:
+            return base64.b64encode(f.read())
     except Exception as e:
         print(str(e))
 
