@@ -3,6 +3,17 @@ from omnizart.drum.app import DrumTranscription
 # from omnizart.chord.app import ChordTranscription
 from omnizart.vocal.app import VocalTranscription
 from omnizart.beat.app import BeatTranscription
+import base64
+
+def transcribe_b64(file_content, difficulty = 3):
+    filename = "temp.mp3"
+    try:
+        file_content = base64.b64decode(file_content)
+        with open(filename, "w") as f:
+            f.write(file_content.decode("utf-8"))
+        transcribe(filename, difficulty)
+    except Exception as e:
+        print(str(e))
 
 def transcribe(file, difficulty = 3):
     """
