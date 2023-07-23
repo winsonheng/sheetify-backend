@@ -8,12 +8,12 @@ import base64
 def transcribe_b64(file_content, difficulty = 3):
     filename = "temp.mp3"
     try:
-        file_content = base64.b64decode(file_content)
-        with open(filename, "w") as f:
-            f.write(file_content.decode("utf-8"))
+        file_content = base64.b64decode(file_content.encode('ascii'))
+        with open(filename, "wb") as f:
+            f.write(file_content)
         transcribe(filename, difficulty)
         with open(filename[:-3] + "mid", "rb") as f:
-            return base64.b64encode(f.read())
+            return base64.b64encode(f.read()).decode("ascii")
     except Exception as e:
         print(str(e))
 
