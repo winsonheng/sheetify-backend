@@ -69,6 +69,7 @@ def save_song(user, song_name, song_base64, difficulty, bpm):
     print('======================starting to upload=============================')
     song = Song(user=user)
     song.name = song_name
+    song.username = user.username
     song.song_original.save(song_name, ContentFile(base64.b64decode(song_base64)))
     song.difficulty = difficulty
     song.bpm = bpm
@@ -91,6 +92,22 @@ def get_songs_by_user(request):
     user = Token.objects.get(key=request.auth.key).user
     
     songs = Song.objects.filter(user=user).values()
+    
+    for song in songs:
+        print(song['name'], song['song_original'])
+        song['download_link'] = generate_download_signed_url_v4(song['song_original'])
+    
+    return JsonResponse({
+        'songList': from_query_set(songs)
+    }, status=StatusCode.OK)
+
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+def get_all_songs(request):
+    user = Token.objects.get(key=request.auth.key).user
+    
+    songs = Song.objects.select_related().values()
     
     for song in songs:
         print(song['name'], song['song_original'])

@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 import base64
-from transcription.utils import transcribe_b64
+from transcribe_song.utils import transcribe_b64
 
 # Create your views here.
 @csrf_exempt

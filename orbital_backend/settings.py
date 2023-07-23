@@ -117,7 +117,7 @@ REST_FRAMEWORK = {
 ENVIRONMENT = env('ENVIRONMENT')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
 # Application definition
@@ -126,6 +126,7 @@ INSTALLED_APPS = [
     'songs',
     'users',
     #'transcription',
+    #'transcribe_song',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
