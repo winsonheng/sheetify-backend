@@ -5,6 +5,11 @@ from omnizart.vocal.app import VocalTranscription
 from omnizart.beat.app import BeatTranscription
 import base64
 
+VOCAL = VocalTranscription()
+DRUM = DrumTranscription()
+BEAT = BeatTranscription()
+MUSIC = MusicTranscription()
+
 def transcribe_b64(file_content, difficulty = 3):
     filename = "temp.mp3"
     try:
@@ -26,8 +31,8 @@ def transcribe(file, difficulty = 3):
     EXTREME = 3
     """
     model = None
-    if difficulty == 0: model = VocalTranscription()
-    elif difficulty == 1: model = DrumTranscription()
-    elif difficulty == 2: model = BeatTranscription()
-    else: model = MusicTranscription()
+    if difficulty == 0: model = VOCAL
+    elif difficulty == 1: model = DRUM
+    elif difficulty == 2: model = BEAT
+    else: model = MUSIC
     model.transcribe(file) # output is file.mid
