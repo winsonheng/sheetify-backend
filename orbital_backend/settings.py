@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from google.oauth2 import service_account
 
+import os
 import environ
 env = environ.Env()
 environ.Env.read_env()
@@ -26,32 +27,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
-DEV_CLIENT_URL = env('DEV_CLIENT_URL')
-DEV_ALLOWED_HOST = env('DEV_ALLOWED_HOST')
-DEV_VERIFY_EMAIL_URL = env('DEV_VERIFY_EMAIL_URL')
-PROD_CLIENT_URL = env('PROD_CLIENT_URL')
-PROD_ALLOWED_HOST = env('PROD_ALLOWED_HOST')
-PROD_VERIFY_EMAIL_URL = env('PROD_VERIFY_EMAIL_URL')
+CLIENT_URL = env('CLIENT_URL')
+ALLOWED_HOST = env('ALLOWED_HOST')
+VERIFY_EMAIL_URL = env('VERIFY_EMAIL_URL')
 
 
 CORS_ALLOWED_ORIGINS = [
-    DEV_CLIENT_URL,
-    PROD_CLIENT_URL
+    CLIENT_URL,
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    DEV_CLIENT_URL,
-    PROD_CLIENT_URL
+    CLIENT_URL,
 ]
 
 ALLOWED_HOSTS = [
-    DEV_ALLOWED_HOST,
-    PROD_ALLOWED_HOST
+    ALLOWED_HOST
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    DEV_CLIENT_URL,
-    PROD_CLIENT_URL
+    CLIENT_URL
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -113,8 +107,6 @@ REST_FRAMEWORK = {
     ),
 
 }
-
-ENVIRONMENT = env('ENVIRONMENT')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False

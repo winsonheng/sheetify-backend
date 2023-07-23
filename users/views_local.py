@@ -117,12 +117,9 @@ def send_verification_email(user: User):
     print(urlsafe_base64_encode(force_bytes(user.pk)))
     print(activation_token)
     
-    environment = getattr(settings, 'ENVIRONMENT', 'DEV')
+    domain = getattr(settings, 'CLIENT_URL', 'localhost:3000') + getattr(settings, 'VERIFY_EMAIL_URL', '')
     
-    domain = getattr(settings, f'{environment}_CLIENT_URL', 'localhost:3000') + getattr(settings, f'{environment}_VERIFY_EMAIL_URL', '')
-    
-    print(environment)
-    print(f'{environment}_VERIFY_EMAIL_URL')
+    print('VERIFY_EMAIL_URL')
     print(domain)
     
     message = render_to_string('verification_email.html', {  
