@@ -1,3 +1,5 @@
-django
+Django
 django-environ
+Cython
+numpy
 google-cloud
