@@ -22,4 +22,5 @@ urlpatterns = [
     path("users/", include("users.urls")),
     path("admin/", admin.site.urls),
     path('verification/', include('verify_email.urls')),
+    path('transcribe_song/', include('transcribe_song.urls')),
 ]
