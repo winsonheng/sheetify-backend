@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from google.oauth2 import service_account
 
-import os
+import json
 import environ
 env = environ.Env()
 environ.Env.read_env()
@@ -71,11 +71,27 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
 
 # Google Cloud
 
+GCLOUD_PRIVATE_KEY = env('GCLOUD_PRIVATE_KEY').replace('\\n', '\n')
+
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
 
-GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    "orbital_backend/service-account.json"
-)
+GS_CREDENTIALS = service_account.Credentials.from_service_account_info({
+    "type": "service_account",
+    "project_id": env('GCLOUD_PROJECT_ID'),
+    "private_key_id": env('GCLOUD_PRIVATE_KEY_ID'),
+    "private_key": GCLOUD_PRIVATE_KEY,
+    "client_email": env('GCLOUD_CLIENT_EMAIL'),
+    "client_id": env('GCLOUD_CLIENT_ID'),
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/orbital-backend-staging%40orbital-2023-389510.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+})
+
+# .from_service_account_file(
+#     "orbital_backend/service-account.json"
+# )
 
 GS_BUCKET_NAME = 'orbital-backend'
 
