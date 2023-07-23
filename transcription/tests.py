@@ -1,6 +1,6 @@
 from django.test import TestCase
 # Create your tests here.
-import transcribe
+from . import transcribe
 import filecmp
 import os
 
