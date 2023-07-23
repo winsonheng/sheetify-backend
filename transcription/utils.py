@@ -30,4 +30,4 @@ def transcribe(file, difficulty = 3):
     elif difficulty == 1: model = DrumTranscription()
     elif difficulty == 2: model = BeatTranscription()
     else: model = MusicTranscription()
-    model.transcribe(file) # output is file.midi
+    model.transcribe(file) # output is file.mid

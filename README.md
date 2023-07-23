@@ -1,7 +1,7 @@
 # Sheetify Backend
 
 # Installation
-Run the following commands (Python 3 required):
+Run the following commands on a linux environment (Python 3 required):
 ```
 pip install -r requirements.txt
 pip install git+https://github.com/Music-and-Culture-Technology-Lab/omnizart
