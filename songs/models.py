@@ -12,6 +12,8 @@ class Song(models.Model):
         EXTREME = 'Extreme'
     
     user = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True)
+    
+    username = models.CharField(max_length=255, unique=True, null=True)
 
     name = models.CharField(max_length=255)
 

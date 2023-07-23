@@ -21,5 +21,6 @@ urlpatterns = [
     path("songs/", include("songs.urls")),
     path("users/", include("users.urls")),
     path("admin/", admin.site.urls),
-    path('transcribe_song/', include('transcribe_song.urls')),
+    #path('transcribe_song/', include('transcribe_song.urls')),
+    #path('transcription/', include('transcription.urls')),
 ]
