@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from google.oauth2 import service_account
 
-import json
+import dj_database_url
 import environ
 env = environ.Env()
 environ.Env.read_env()
@@ -182,25 +182,29 @@ WSGI_APPLICATION = 'orbital_backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
+if env('ENVIRONMENT') == 'DEV':
+    DATABASES = {
 
-    'default': {
+        'default': {
 
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': env('DATABASE_NAME'),
+            'NAME': env('DATABASE_NAME'),
 
-        'USER': env('DATABASE_USER'),
+            'USER': env('DATABASE_USER'),
 
-        'PASSWORD': env('DATABASE_PASSWORD'),
+            'PASSWORD': env('DATABASE_PASSWORD'),
 
-        'HOST': 'localhost',
+            'HOST': 'localhost',
 
-        'PORT': '5432',
+            'PORT': '5432',
+
+        }
 
     }
-
-}
+else:
+    db_from_env = dj_database_url.config(conn_max_age=500)
+    DATABASES['default'].update(db_from_env)
 
 
 # Password validation
