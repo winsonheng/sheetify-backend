@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class TranscriptionConfig(AppConfig):
+class TranscribeSongConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'transcription'
+    name = 'transcribe_song'

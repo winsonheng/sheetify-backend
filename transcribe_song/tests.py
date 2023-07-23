@@ -1,6 +1,6 @@
 from django.test import TestCase
 # Create your tests here.
-from . import transcribe
+from utils import transcribe
 import filecmp
 import os
 
@@ -23,7 +23,7 @@ class TestTranscription(TestCase):
         Test transcription of audio file at the default difficulty.
         """
         removeFile(TEST_OUTPUT)
-        transcribe.transcribe(TEST_INPUT)
+        transcribe(TEST_INPUT)
         self.assertTrue(filecmp.cmp(TEST_OUTPUT, TEST_LOC + "expected.mid", shallow = False))
 
     def testTranscription0(self):
@@ -31,7 +31,7 @@ class TestTranscription(TestCase):
         Test transcription of audio file at difficulty 0.
         """
         removeFile(TEST_OUTPUT)
-        transcribe.transcribe(TEST_INPUT,0)
+        transcribe(TEST_INPUT,0)
         self.assertTrue(filecmp.cmp(TEST_OUTPUT, TEST_LOC + "diff0_expected.mid", shallow = False))
 
     def testTranscription1(self):
@@ -39,7 +39,7 @@ class TestTranscription(TestCase):
         Test transcription of audio file at difficulty 1.
         """
         removeFile(TEST_OUTPUT)
-        transcribe.transcribe(TEST_INPUT,1)
+        transcribe(TEST_INPUT,1)
         self.assertTrue(filecmp.cmp(TEST_OUTPUT, TEST_LOC + "diff1_expected.mid", shallow = False))
     
     def testTranscription2(self):
@@ -47,7 +47,7 @@ class TestTranscription(TestCase):
         Test transcription of audio file at difficulty 2.
         """
         removeFile(TEST_OUTPUT)
-        transcribe.transcribe(TEST_INPUT,2)
+        transcribe(TEST_INPUT,2)
         self.assertTrue(filecmp.cmp(TEST_OUTPUT, TEST_LOC + "diff2_expected.mid", shallow = False))
 
     def testTranscription3(self):
@@ -55,7 +55,7 @@ class TestTranscription(TestCase):
         Test transcription of audio file at difficulty 3.
         """
         removeFile(TEST_OUTPUT)
-        transcribe.transcribe(TEST_INPUT,3)
+        transcribe(TEST_INPUT,3)
         self.assertTrue(filecmp.cmp(TEST_OUTPUT, TEST_LOC + "diff3_expected.mid", shallow = False))
 
     
