@@ -179,6 +179,7 @@ def reset_password(request):
     pass
 
 # Not using api_view decorator as it uses auth classes in settings.py
+@csrf_exempt
 def login_email(request):
     body = json.loads(request.body)
     email = body.get('email')
