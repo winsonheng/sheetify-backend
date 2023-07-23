@@ -116,3 +116,19 @@ def get_all_songs(request):
     return JsonResponse({
         'songList': from_query_set(songs)
     }, status=StatusCode.OK)
+    
+    
+@csrf_exempt
+def upload_transcription(request):
+    body = json.loads(request.body)
+    song_id = body.get('song_id', '')
+    transcription_b64 = body.get('transcription', '')
+    
+    song = Song.objects.get(pk=song_id)
+    song.song_pdf.save(song.name, ContentFile(base64.b64decode(transcription_b64)))
+    song.save()
+    
+    return JsonResponse({
+        'message': 'Successfully uploaded transcription for ' + song.name
+    }, status=StatusCode.OK)
+    
