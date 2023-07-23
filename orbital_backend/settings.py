@@ -125,7 +125,7 @@ DEBUG = True
 INSTALLED_APPS = [
     'songs',
     'users',
-    'transcription',
+    'transcribe_song',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
