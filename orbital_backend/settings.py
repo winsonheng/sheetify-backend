@@ -26,29 +26,32 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
-dev_client_url = env('DEV_CLIENT_URL')
-dev_allowed_host = env('DEV_ALLOWED_HOST')
-prod_client_url = env('PROD_CLIENT_URL')
-prod_allowed_host = env('PROD_ALLOWED_HOST')
+DEV_CLIENT_URL = env('DEV_CLIENT_URL')
+DEV_ALLOWED_HOST = env('DEV_ALLOWED_HOST')
+DEV_VERIFY_EMAIL_URL = env('DEV_VERIFY_EMAIL_URL')
+PROD_CLIENT_URL = env('PROD_CLIENT_URL')
+PROD_ALLOWED_HOST = env('PROD_ALLOWED_HOST')
+PROD_VERIFY_EMAIL_URL = env('PROD_VERIFY_EMAIL_URL')
+
 
 CORS_ALLOWED_ORIGINS = [
-    dev_client_url,
-    prod_client_url
+    DEV_CLIENT_URL,
+    PROD_CLIENT_URL
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    dev_client_url,
-    prod_client_url
+    DEV_CLIENT_URL,
+    PROD_CLIENT_URL
 ]
 
 ALLOWED_HOSTS = [
-    dev_allowed_host,
-    prod_allowed_host
+    DEV_ALLOWED_HOST,
+    PROD_ALLOWED_HOST
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    dev_client_url,
-    prod_client_url
+    DEV_CLIENT_URL,
+    PROD_CLIENT_URL
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -94,7 +97,6 @@ EMAIL_HOST_PASSWORD = env('EMAIL_PW')
 
 DEFAULT_FROM_EMAIL = env('EMAIL_FROM')
 
-
 # For user model
 
 AUTH_USER_MODEL = 'users.User'
@@ -112,6 +114,7 @@ REST_FRAMEWORK = {
 
 }
 
+ENVIRONMENT = env('ENVIRONMENT')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -150,7 +153,7 @@ ROOT_URLCONF = 'orbital_backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['users/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -11,5 +11,7 @@ urlpatterns = [
     path("signupEmail/", views_local.signup_email, name="signup_email"),
     path("resendVerificationEmail/", views_local.resend_verification_email, name="resend_verification_email"),
     path('loginEmail/', views_local.login_email, name='login_email'),
-    path('verification/', include('verify_email.urls')),
+    path('verifyEmail/', views_local.verify_email, name='verify_email'),
+    path('setUsername/', views_local.set_username, name='set_username')
+    #path('verification/', include('verify_email.urls')),
 ]

@@ -1,21 +1,27 @@
 from common.constants import StatusCode
 from common.util.json_util import from_model_object
 from django.contrib.auth import get_user_model, authenticate
+from django.contrib.sites.shortcuts import get_current_site  
 from django.shortcuts import render
 from django.core.exceptions import BadRequest
 from django.core.mail import send_mail
-from django.http import HttpResponse
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_str  
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode  
+from django.http import HttpResponse, HttpRequest
 from django.http import JsonResponse
 from django.middleware import csrf
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from rest_framework.authtoken import views
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from users.forms import SignupForm
 from users.models import User
 from django.conf import settings
 import json
 from users.dummy_form import DummyForm
+from users.token_generator import TokenGenerator
 #from verify_email.email_handler import send_verification_email
 
 
@@ -53,8 +59,9 @@ def signup_email(request):
     if existing_user is None: # Remove this once finish testing email
         user.save()
         token = Token.objects.create(user=user)
-    
-    send_verification_email(user)
+        send_verification_email(user)
+    else:
+        return resend_verification_email(request)
     
     # TODO
     # Not sure why verification email not working
@@ -103,14 +110,68 @@ def get_user_by_email(email):
 
 
 def send_verification_email(user: User):
+    activation_token = TokenGenerator().make_token(user)
+    
+    print(user.pk)
+    print(force_bytes(user.pk))
+    print(urlsafe_base64_encode(force_bytes(user.pk)))
+    print(activation_token)
+    
+    environment = getattr(settings, 'ENVIRONMENT', 'DEV')
+    
+    domain = getattr(settings, f'{environment}_CLIENT_URL', 'localhost:3000') + getattr(settings, f'{environment}_VERIFY_EMAIL_URL', '')
+    
+    print(environment)
+    print(f'{environment}_VERIFY_EMAIL_URL')
+    print(domain)
+    
+    message = render_to_string('verification_email.html', {  
+                'user': user,  
+                'domain': f'{domain}/{urlsafe_base64_encode(force_bytes(user.pk))}/{activation_token}' 
+            })  
+    
+    print(message)
+    
     send_mail(
         'Test Subject',
-        'Test message',
+        message,
         getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply<no_reply@domain.com>'),
         [user.email],
-        fail_silently=False,
-        html_message='<button>CLICK ME!</button>'
+        fail_silently=False
     )
+
+
+@csrf_exempt
+def verify_email(request):
+    print('Verifying your email:')
+    body = json.loads(request.body)
+    uidb64 = body.get('uidb64')
+    token = body.get('token')
+    
+    print(uidb64)
+    uid = force_str(urlsafe_base64_decode(uidb64))
+    
+    print(uid)
+    print(token)
+    
+    print(TokenGenerator().check_token(User.objects.get(pk=uid), token))
+    
+    user = User.objects.get(pk=uid)
+    
+    verify_ok = TokenGenerator().check_token(user, token)
+    
+    if not verify_ok:
+        return JsonResponse({
+            'message': 'Invalid or expired verification link. Please sign up again.'
+        }, status=StatusCode.BAD_REQUEST)
+        
+    user.verification_status = User.VerificationStatus.VERIFIED
+    user.save()
+    
+    return JsonResponse({
+        'message': 'Your account has been verified.',
+        'email': user.email
+    }, status=StatusCode.OK)
 
 
 # Not using api_view decorator as it uses auth classes in settings.py
@@ -139,4 +200,16 @@ def login_email(request):
     }, status=StatusCode.OK)
     
 
-        
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+def set_username(request):
+    user = Token.objects.get(key=request.auth.key).user
+    body = json.loads(request.body)
+    username = body.get('username', '')
+    
+    user.username = username
+    user.save()
+    
+    return JsonResponse({
+        'message': 'Username successfully set!',
+    }, status=StatusCode.OK)
