@@ -45,7 +45,9 @@ def upload_song(request):
     # print(song_base64)
 
     # play_song(song_base64)
-    save_song(user, song_name, song_base64, difficulty, bpm)
+    song_id = save_song(user, song_name, song_base64, difficulty, bpm)
+    
+    print(song_id)
 
     return JsonResponse({
         'message': 'Successfully uploaded: ' + song_name
@@ -75,6 +77,7 @@ def save_song(user, song_name, song_base64, difficulty, bpm):
     # cache.set('song', song)
     print('*****successfully uploaded ' + song_name + ' to GCloud*****')
     print('======================completed   upload=============================')
+    return song.id
 
 # TODO: API for delete
 def delete_song(user, song_name):
