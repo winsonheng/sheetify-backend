@@ -62,6 +62,9 @@ def upload_song(request):
     
     print(transcription)
     
+    if transcription == '' or transcription == None:
+        transcription = 'TVRoZAAAAAYAAQACANxNVHJrAAAAGAD/UQMHoSAA/1gEBAIYCAH/LwCDN/8vAE1UcmsAAAAqAP8DFEFjb3VzdGljIEdyYW5kIFBpYW5vAMAAgXuQTHB/S3AWTAAo/y8A'
+    
     song = Song.objects.get(pk=song_id)
     song.song_pdf.save(song_id + '.mid', ContentFile(base64.b64decode(transcription)))
     song.save()
