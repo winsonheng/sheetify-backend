@@ -48,33 +48,33 @@ def upload_song(request):
     
     print(song_id)
     
-    result = requests.post(
-        getattr(settings, 'ML_SERVER_URL', '') + '/transcribe_song/',
-        data={
-            'base64_data': song_base64,
-            'song_id': song_id
-        }
-    )
+    # result = requests.post(
+    #     getattr(settings, 'ML_SERVER_URL', '') + '/transcribe_song/',
+    #     data={
+    #         'base64_data': song_base64,
+    #         'song_id': song_id
+    #     }
+    # )
     
-    data = result.json()
-    transcription = data.get('transcription', '')
-    song_id = data.get('song_id', '')
+    # data = result.json()
+    # transcription = data.get('transcription', '')
+    # song_id = data.get('song_id', '')
     
-    song = Song.objects.get(pk=song_id)
-    song.song_pdf.save(song_id + '.mid', ContentFile(base64.b64decode(transcription)))
-    song.save()
+    # song = Song.objects.get(pk=song_id)
+    # song.song_pdf.save(song_id + '.mid', ContentFile(base64.b64decode(transcription)))
+    # song.save()
     
-    songs = Song.objects.filter(id=song_id).values()
-    transcription_url = ''
+    # songs = Song.objects.filter(id=song_id).values()
+    # transcription_url = ''
     
-    for song in songs:
-        transcription_url = generate_download_signed_url_v4(song['song_pdf'])
+    # for song in songs:
+    #     transcription_url = generate_download_signed_url_v4(song['song_pdf'])
 
 
     return JsonResponse({
         'message': 'Successfully uploaded: ' + song_name,
-        'transcription': transcription,
-        'transcription_url': transcription_url
+        # 'transcription': transcription,
+        # 'transcription_url': transcription_url
     }, status=StatusCode.OK)
 
     
