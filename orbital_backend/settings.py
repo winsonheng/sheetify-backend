@@ -62,7 +62,8 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
     'Content-Type',
     'X-CSRFToken',
-    'Authorization'
+    'Authorization',
+    'Access-Control-Allow-Origin'
 ]
 
 CSRF_COOKIE_HTTPONLY = False
