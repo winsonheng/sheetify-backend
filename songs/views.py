@@ -33,8 +33,6 @@ from rest_framework.decorators import permission_classes
 # @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 def upload_song(request):
-    print(request.user.email)
-    print(request.auth.key)
     user = Token.objects.get(key=request.auth.key).user
 
     body = json.loads(request.body)
