@@ -63,9 +63,6 @@ def upload_song(request):
     transcription = data.get('transcription', '')
     song_id = data.get('song_id', '')
     
-    print(transcription)
-    print(song_id)
-    
     song = Song.objects.get(pk=song_id)
     song.song_pdf.save(song_id + '.mid', ContentFile(base64.b64decode(transcription)))
     song.save()
@@ -125,7 +122,6 @@ def get_songs_by_user(request):
     songs = Song.objects.filter(user=user).values()
     
     for song in songs:
-        print(song['name'], song['song_original'])
         song['download_link'] = generate_download_signed_url_v4(song['song_original']) if song['song_original'] != '' else '' 
         song['transcription'] = generate_download_signed_url_v4(song['song_pdf']) if song['song_pdf'] != '' else '' 
 
@@ -143,7 +139,6 @@ def get_all_songs(request):
     songs = Song.objects.values()
     
     for song in songs:
-        print(song['name'], song['song_original'])
         song['download_link'] = generate_download_signed_url_v4(song['song_original']) if song['song_original'] != '' else '' 
         song['transcription'] = generate_download_signed_url_v4(song['song_pdf']) if song['song_pdf'] != '' else '' 
     
@@ -157,9 +152,6 @@ def upload_transcription(request):
     body = json.loads(request.body)
     song_id = body.get('song_id', '')
     transcription_b64 = body.get('transcription', '')
-    
-    print(song_id)
-    print(transcription_b64[:100])
     
     song = Song.objects.get(pk=song_id)
     song.song_pdf.save(song.name, ContentFile(base64.b64decode(transcription_b64)))
