@@ -45,21 +45,21 @@ def signup_email(request):
     
     existing_user = get_user_by_email(email)
     
-    # if existing_user and existing_user.verification_status != User.VerificationStatus.PENDING:
-    #     # If pending, still send verification email
-    #     verification_status = existing_user.verification_status
+    if existing_user and existing_user.verification_status != User.VerificationStatus.PENDING:
+        # If pending, still send verification email
+        verification_status = existing_user.verification_status
         
-    #     return JsonResponse({
-    #         'message': 'Account already exists',
-    #         'verification_status': verification_status
-    #     }, status=StatusCode.BAD_REQUEST)
+        return JsonResponse({
+            'message': 'Account already exists',
+            'verification_status': verification_status
+        }, status=StatusCode.BAD_REQUEST)
     
     
     user = User()
     user.email = email
     user.set_password(password)
     user.verification_status = User.VerificationStatus.PENDING
-    if existing_user is None: # Remove this once finish testing email
+    if existing_user is None:
         user.save()
         token = Token.objects.create(user=user)
         send_verification_email(user)
@@ -126,9 +126,9 @@ def send_verification_email(user: User):
     print(domain)
     
     message = render_to_string('verification_email.html', {  
-                'user': user,  
-                'domain': f'{domain}/{urlsafe_base64_encode(force_bytes(user.pk))}/{activation_token}' 
-            })  
+        'user': user,  
+        'domain': f'{domain}/{urlsafe_base64_encode(force_bytes(user.pk))}/{activation_token}' 
+    })  
     
     print(message)
     
