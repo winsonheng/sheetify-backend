@@ -2,6 +2,7 @@ import json
 import base64
 import io
 import pygame
+import requests
 from common.constants import StatusCode
 from common.util.json_util import from_query_set
 from common.util.gcloud_util import generate_download_signed_url_v4
@@ -10,6 +11,7 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.conf import settings
 from django.shortcuts import render
 from songs.models import Song
 from users.models import User
@@ -48,6 +50,14 @@ def upload_song(request):
     song_id = save_song(user, song_name, song_base64, difficulty, bpm)
     
     print(song_id)
+    
+    requests.post(
+        getattr(settings, 'ML_SERVER_URL', '') + '/transcribe_song/',
+        data={
+            'base64_data': song_base64,
+            'song_id': song_id
+        }
+    )
 
     return JsonResponse({
         'message': 'Successfully uploaded: ' + song_name

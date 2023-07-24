@@ -13,7 +13,7 @@ class Song(models.Model):
     
     user = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True)
     
-    username = models.CharField(max_length=255, unique=True, null=True)
+    username = models.CharField(max_length=255, blank=True, default=None, null=True)
 
     name = models.CharField(max_length=255)
 
