@@ -51,18 +51,39 @@ def upload_song(request):
     
     print(song_id)
     
-    requests.post(
+    result = requests.post(
         getattr(settings, 'ML_SERVER_URL', '') + '/transcribe_song/',
         data={
             'base64_data': song_base64,
             'song_id': song_id
         }
     )
+    
+    data = result.json()
+    transcription = data.get('transcription', '')
+    song_id = data.get('song_id', '')
+    
+    print(transcription)
+    print(song_id)
+    
+    song = Song.objects.get(pk=song_id)
+    song.song_pdf.save(song_id + '.mid', ContentFile(base64.b64decode(transcription)))
+    song.save()
+    
+    songs = Song.objects.filter(id=song_id).values()
+    transcription_url = ''
+    
+    for song in songs:
+        transcription_url = generate_download_signed_url_v4(song['song_pdf'])
+
 
     return JsonResponse({
-        'message': 'Successfully uploaded: ' + song_name
+        'message': 'Successfully uploaded: ' + song_name,
+        'transcription': transcription,
+        'transcription_url': transcription_url
     }, status=StatusCode.OK)
 
+    
 
 def play_song(song_base64):
     pygame.mixer.init()
@@ -105,7 +126,9 @@ def get_songs_by_user(request):
     
     for song in songs:
         print(song['name'], song['song_original'])
-        song['download_link'] = generate_download_signed_url_v4(song['song_original'])
+        song['download_link'] = generate_download_signed_url_v4(song['song_original']) if song['song_original'] != '' else '' 
+        song['transcription'] = generate_download_signed_url_v4(song['song_pdf']) if song['song_pdf'] != '' else '' 
+
     
     return JsonResponse({
         'songList': from_query_set(songs)
@@ -117,11 +140,12 @@ def get_songs_by_user(request):
 def get_all_songs(request):
     user = Token.objects.get(key=request.auth.key).user
     
-    songs = Song.objects.select_related().values()
+    songs = Song.objects.values()
     
     for song in songs:
         print(song['name'], song['song_original'])
-        song['download_link'] = generate_download_signed_url_v4(song['song_original'])
+        song['download_link'] = generate_download_signed_url_v4(song['song_original']) if song['song_original'] != '' else '' 
+        song['transcription'] = generate_download_signed_url_v4(song['song_pdf']) if song['song_pdf'] != '' else '' 
     
     return JsonResponse({
         'songList': from_query_set(songs)
@@ -133,6 +157,9 @@ def upload_transcription(request):
     body = json.loads(request.body)
     song_id = body.get('song_id', '')
     transcription_b64 = body.get('transcription', '')
+    
+    print(song_id)
+    print(transcription_b64[:100])
     
     song = Song.objects.get(pk=song_id)
     song.song_pdf.save(song.name, ContentFile(base64.b64decode(transcription_b64)))
