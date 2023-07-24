@@ -192,9 +192,13 @@ def login_email(request):
         return JsonResponse({
             'message': 'Please check your login details and try again'
         }, status=StatusCode.UNAUTHORIZED)
-    
+
     # TODO: allow login via username
     
+    if user.verification_status != User.VerificationStatus.VERIFIED:
+        return JsonResponse({
+            'message': 'You have not verified your email!'
+        }, status=StatusCode.UNAUTHORIZED)
     
     return JsonResponse({
         'message': 'Login successful!',
