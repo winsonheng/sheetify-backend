@@ -3,7 +3,10 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 import base64
+import requests
 from transcribe_song.utils import transcribe_b64
+
+POST_URL = 'https://orbital-backend-production.up.railway.app/songs/uploadTranscription/'
 
 # Create your views here.
 @csrf_exempt
@@ -15,8 +18,12 @@ def transcribe_song(request):
         song_id = request.POST.get('song_id')
         # Perform transcription
         transcription = transcribe_b64(base64_data)
+
+        # send POST to server to uplaod transcription
+        result = {'transcription': transcription, 'song_id': song_id}
+        requests.post(POST_URL, json = result)
         # Return the transcription as JSON response
-        return JsonResponse({'transcription': transcription, 'song_id': song_id})
+        return JsonResponse(result)
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
