@@ -40,6 +40,9 @@ def signup_email(request):
     email = body.get('email', '')
     password = body.get('password', '')
     
+    print(email)
+    print(password)
+    
     existing_user = get_user_by_email(email)
     
     # if existing_user and existing_user.verification_status != User.VerificationStatus.PENDING:
