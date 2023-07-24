@@ -1,5 +1,5 @@
 import datetime
-
+from django.conf import settings
 from google.cloud import storage
 
 
@@ -12,7 +12,7 @@ def generate_download_signed_url_v4(blob_name):
     """
     bucket_name = 'orbital-backend'
 
-    storage_client = storage.Client.from_service_account_json('orbital_backend\service-account.json')
+    storage_client = storage.Client.from_service_account_info(getattr(settings, 'GS_CREDENTIALS', ''))
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
 
