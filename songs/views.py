@@ -28,11 +28,10 @@ from rest_framework.decorators import permission_classes
 # Create your views here.
 
 
-#@csrf_exempt
-@ensure_csrf_cookie
-@api_view(['POST'])
+@csrf_exempt
+# @ensure_csrf_cookie
+# @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
-
 def upload_song(request):
     print(request.user.email)
     print(request.auth.key)
