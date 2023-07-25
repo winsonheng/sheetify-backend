@@ -5,7 +5,7 @@ import pygame
 import requests
 from common.constants import StatusCode
 from common.util.json_util import from_query_set
-from common.util.gcloud_util import generate_download_signed_url_v4
+from common.util.gcloud_util import generate_download_signed_url_v4, cors_configuration
 from django.core.cache import cache
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
@@ -162,4 +162,12 @@ def upload_transcription(request):
     return JsonResponse({
         'message': 'Successfully uploaded transcription for ' + song.name
     }, status=StatusCode.OK)
+
+
+@csrf_exempt
+def update_gcloud_cors(request):
+    cors_configuration()
     
+    return JsonResponse({
+        'message': 'GCloud CORS settings updated successfully.'
+    }, status=StatusCode.OK)

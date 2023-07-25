@@ -25,3 +25,25 @@ def generate_download_signed_url_v4(blob_name):
     )
 
     return url
+
+
+def cors_configuration():
+    """Set a bucket's CORS policies configuration."""
+    bucket_name = 'orbital-backend'
+
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    bucket.cors = [
+        {
+            "origin": ["*"],
+            "responseHeader": [
+                "Content-Type",
+                "x-goog-resumable"],
+            "method": ['PUT', 'POST'],
+            "maxAgeSeconds": 3600
+        }
+    ]
+    bucket.patch()
+
+    print(f"Set CORS policies for bucket {bucket.name} is {bucket.cors}")
+    return bucket
