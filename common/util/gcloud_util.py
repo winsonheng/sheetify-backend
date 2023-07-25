@@ -37,6 +37,7 @@ def cors_configuration():
         {
             "origin": ["*"],
             "responseHeader": [
+                "Access-Control-Allow-Origin",
                 "Content-Type",
                 "x-goog-resumable"],
             "method": ['PUT', 'POST'],
