@@ -1,1 +1,1 @@
-web: python manage.py migrate && python manage.py collectstatic --no-input && gunicorn orbital_backend.wsgi
+web: python manage.py migrate && python manage.py collectstatic --no-input && gunicorn --timeout 999 orbital_backend.wsgi
