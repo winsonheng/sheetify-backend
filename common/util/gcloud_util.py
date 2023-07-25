@@ -40,7 +40,7 @@ def cors_configuration():
                 "Access-Control-Allow-Origin",
                 "Content-Type",
                 "x-goog-resumable"],
-            "method": ['PUT', 'POST'],
+            "method": ['GET', 'PUT', 'POST'],
             "maxAgeSeconds": 3600
         }
     ]
