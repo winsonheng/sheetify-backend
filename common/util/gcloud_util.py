@@ -31,7 +31,7 @@ def cors_configuration():
     """Set a bucket's CORS policies configuration."""
     bucket_name = 'orbital-backend'
 
-    storage_client = storage.Client()
+    storage_client = storage.Client(bucket_name, getattr(settings, 'GS_CREDENTIALS', ''))
     bucket = storage_client.get_bucket(bucket_name)
     bucket.cors = [
         {
