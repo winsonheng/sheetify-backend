@@ -40,8 +40,7 @@ def signup_email(request):
     email = body.get('email', '')
     password = body.get('password', '')
     
-    print(email)
-    print(password)
+    print('Signing up: ' + email)
     
     existing_user = get_user_by_email(email)
     
@@ -115,22 +114,12 @@ def get_user_by_email(email):
 def send_verification_email(user: User):
     activation_token = TokenGenerator().make_token(user)
     
-    print(user.pk)
-    print(force_bytes(user.pk))
-    print(urlsafe_base64_encode(force_bytes(user.pk)))
-    print(activation_token)
-    
     domain = getattr(settings, 'CLIENT_URL', 'localhost:3000') + getattr(settings, 'VERIFY_EMAIL_URL', '')
-    
-    print('VERIFY_EMAIL_URL')
-    print(domain)
     
     message = render_to_string('verification_email.html', {  
         'user': user,  
         'domain': f'{domain}/{urlsafe_base64_encode(force_bytes(user.pk))}/{activation_token}' 
-    })  
-    
-    print(message)
+    })
     
     send_mail(
         'Test Subject',
@@ -148,13 +137,7 @@ def verify_email(request):
     uidb64 = body.get('uidb64')
     token = body.get('token')
     
-    print(uidb64)
     uid = force_str(urlsafe_base64_decode(uidb64))
-    
-    print(uid)
-    print(token)
-    
-    print(TokenGenerator().check_token(User.objects.get(pk=uid), token))
     
     user = User.objects.get(pk=uid)
     
@@ -185,7 +168,7 @@ def login_email(request):
     email = body.get('email')
     username = body.get('username')
     password = body.get('password')
-    print(email, password)
+
     # Uses auth.py to authenticate via email
     user = authenticate(username=email, password=password)
     if user is None:
