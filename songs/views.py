@@ -48,13 +48,23 @@ def upload_song(request):
     
     print(song_id)
     
-    result = requests.post(
-        getattr(settings, 'ML_SERVER_URL', '') + '/transcribe_song/',
-        data={
-            'base64_data': song_base64,
-            'song_id': song_id
-        }
-    )
+    try:
+        result = requests.post(
+            getattr(settings, 'ML_SERVER_URL', '') + '/transcribe_song/',
+            data={
+                'base64_data': song_base64,
+                'song_id': song_id
+            }
+        )
+    except Exception:
+        # TODO: Fix this
+        # Temporary fallback if ML server down
+        return JsonResponse({
+        'message': 'Successfully uploaded: ' + song_name,
+        'songid': 12,
+        'transcription': '',
+        'transcription_url': ''
+    }, status=StatusCode.OK)
     
     data = result.json()
     transcription = data.get('transcription', '')
@@ -78,6 +88,7 @@ def upload_song(request):
 
     return JsonResponse({
         'message': 'Successfully uploaded: ' + song_name,
+        'songid': song_id,
         'transcription': transcription,
         'transcription_url': transcription_url
     }, status=StatusCode.OK)
@@ -114,6 +125,24 @@ def save_song(user, song_name, song_base64, difficulty, bpm):
 def delete_song(user, song_name):
     #song = Song()
     pass
+    
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+def get_song_by_id(request, songid):
+    
+    songs = Song.objects.filter(id=songid).values()
+    
+    print(songs)
+    
+    for song in songs:
+        song['download_link'] = generate_download_signed_url_v4(song['song_original']) if song['song_original'] != '' else '' 
+        song['transcription'] = generate_download_signed_url_v4(song['song_pdf']) if song['song_pdf'] != '' else '' 
+
+    
+    return JsonResponse({
+        'song': from_query_set(songs)
+    }, status=StatusCode.OK)
 
 
 @api_view(['GET'])
